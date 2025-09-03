@@ -28,10 +28,10 @@ CREATE TABLE "RpgQuests" (
 );
 
 CREATE TABLE "RpgQuestSkills" (
-  "SkillId" INT,
   "QuestId" INT,
-  FOREIGN KEY ("SkillId") REFERENCES "RpgSkills" ("Id"),
-  FOREIGN KEY ("QuestId") REFERENCES "RpgQuests" ("Id")
+  "SkillId" INT,
+  FOREIGN KEY ("QuestId") REFERENCES "RpgQuests" ("Id"),
+  FOREIGN KEY ("SkillId") REFERENCES "RpgSkills" ("Id")
 );
 
 CREATE TABLE "RpgActiveQuests" (
