@@ -1,66 +1,71 @@
--- docker exec -i <container_name> mysql -u root -ppassword <mydb> < /path/to/script.sql
-
-
-CREATE TABLE Characters (
-  id BIGSERIAL PRIMARY KEY,
-  user_id TEXT,
-  "name" VARCHAR(255) NOT NULL,
-  xp INT,
-  "money" INT,
-  FOREIGN KEY (user_id) REFERENCES AspNetRoles (Id)
+CREATE TABLE "RpgCharacters" (
+  "Id" BIGSERIAL PRIMARY KEY,
+  "UserId" TEXT,
+  "Name" VARCHAR(255) NOT NULL,
+  "Xp" INT,
+  "Money" INT,
+  FOREIGN KEY ("UserId") REFERENCES "AspNetUsers" ("Id")
 );
 
-CREATE TABLE Skills (
-  id BIGSERIAL PRIMARY KEY,
-  "name" VARCHAR(255) NOT NULL,
+CREATE TABLE "RpgSkills" (
+  "Id" BIGSERIAL PRIMARY KEY,
+  "Name" VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE CharacterSkills (
-  character_id INT,
-  skill_id INT,
-  FOREIGN KEY (character_id) REFERENCES Characters (id),
-  FOREIGN KEY (skill_id) REFERENCES Skills (id),
+CREATE TABLE "RpgCharacterSkills" (
+  "CharacterId" INT,
+  "SkillId" INT,
+  FOREIGN KEY ("CharacterId") REFERENCES "RpgCharacters" ("Id"),
+  FOREIGN KEY ("SkillId") REFERENCES "RpgSkills" ("Id")
 );
 
-CREATE TABLE Quests (
-  id BIGSERIAL PRIMARY KEY,
-  "name" VARCHAR(255) NOT NULL,
-  "time" INT DEFAULT 15,
-  xp_reward INT,
-  money_reward INT,
+CREATE TABLE "RpgQuests" (
+  "Id" BIGSERIAL PRIMARY KEY,
+  "Name" VARCHAR(255) NOT NULL,
+  "Time" INT DEFAULT 15,
+  "Xp" INT,
+  "Money" INT
 );
 
-CREATE TABLE ActiveQuests (
-  character_id INT,
-  quest_id INT,
-  FOREIGN KEY (character_id) REFERENCES Characters (id),
-  FOREIGN KEY (quest_id) REFERENCES Quests (id),
+CREATE TABLE "RpgQuestSkills" (
+  "SkillId" INT,
+  "QuestId" INT,
+  FOREIGN KEY ("SkillId") REFERENCES "RpgSkills" ("Id"),
+  FOREIGN KEY ("QuestId") REFERENCES "RpgQuests" ("Id")
 );
 
-CREATE TABLE Upgrades (
-  id BIGSERIAL PRIMARY KEY,
-  cost INT,
-  "name" VARCHAR(255) NOT NULL,
-  "description" VARCHAR(1000) NOT NULL,
+CREATE TABLE "RpgActiveQuests" (
+  "CharacterId" INT,
+  "QuestId" INT,
+  FOREIGN KEY ("CharacterId") REFERENCES "RpgCharacters" ("Id"),
+  FOREIGN KEY ("QuestId") REFERENCES "RpgQuests" ("Id")
 );
 
-CREATE TABLE AppliedUpgrades (
-  character_id INT,
-  upgrade_id INT,
-  FOREIGN KEY (character_id) REFERENCES Characters (id),
-  FOREIGN KEY (upgrade_id) REFERENCES Upgrades (id),
+CREATE TABLE "RpgUpgrades" (
+  "Id" BIGSERIAL PRIMARY KEY,
+  "Level" INT,
+  "Cost" INT,
+  "Name" VARCHAR(255) NOT NULL,
+  "Description" VARCHAR(1000) NOT NULL
 );
 
-CREATE TABLE Items (
-  id BIGSERIAL PRIMARY KEY,
-  cost INT,
-  "name" VARCHAR(255) NOT NULL,
-  "description" VARCHAR(1000) NOT NULL,
+CREATE TABLE "RpgAppliedUpgrades" (
+  "CharacterId" INT,
+  "UpgradeId" INT,
+  FOREIGN KEY ("CharacterId") REFERENCES "RpgCharacters" ("Id"),
+  FOREIGN KEY ("UpgradeId") REFERENCES "RpgUpgrades" ("Id")
 );
 
-CREATE TABLE OwnedItems (
-  character_id INT,
-  item_id INT,
-  FOREIGN KEY (character_id) REFERENCES Characters (id),
-  FOREIGN KEY (item_id) REFERENCES Items (id),
+CREATE TABLE "RpgItems" (
+  "Id" BIGSERIAL PRIMARY KEY,
+  "Cost" INT,
+  "Name" VARCHAR(255) NOT NULL,
+  "Description" VARCHAR(1000) NOT NULL
+);
+
+CREATE TABLE "RpgOwnedItems" (
+  "CharacterId" INT,
+  "ItemId" INT,
+  FOREIGN KEY ("CharacterId") REFERENCES "RpgCharacters" ("Id"),
+  FOREIGN KEY ("ItemId") REFERENCES "RpgItems" ("Id")
 );
