@@ -1,0 +1,54 @@
+﻿@page "/shop"
+@using FormalRPG.Client.ViewModels
+@rendermode InteractiveAuto
+
+
+<PageTitle>Shop</PageTitle>
+
+@if (unpurchasedItems == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <MudText Typo="Typo.h1" Class="px-6">Shop</MudText>
+
+    <p>This is the shop where we buy stuff.</p>
+
+    <MudContainer Class="d-flex flex-row flex-wrap gap-4">
+        @foreach (var item in unpurchasedItems)
+        {
+            <ShopItem item="@item" PurchaseMethod="@PurchaseItem" />
+        }
+    </MudContainer>
+}
+
+
+@code {
+    private Character? character { get; set; }
+    private ICollection<Item>? unpurchasedItems = new List<Item>()
+    {
+        new Item { Name = "Item", Description = "Stuff about the item.", Cost = 200 },
+        new Item { Name = "Item", Description = "Stuff about the item.", Cost = 200 },
+        new Item { Name = "Item", Description = "Stuff about the item.", Cost = 200 },
+        new Item { Name = "Item", Description = "Stuff about the item.", Cost = 200 },
+        new Item { Name = "Item", Description = "Stuff about the item.", Cost = 200 },
+    };
+
+    private void OnInitialized()
+    {
+        // load only unpurchased items
+    }
+
+    private void PurchaseItem(Item item)
+    {
+        // check the cost
+        if (true) //character?.Money > item.Cost)
+        {
+            // remove item from purchase
+            unpurchasedItems.Remove(item);
+
+            // refresh? - is that automatic or manual
+        }
+    }
+}

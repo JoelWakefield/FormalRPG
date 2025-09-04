@@ -1,0 +1,39 @@
+﻿@using FormalRPG.Client.ViewModels
+
+<MudCard>
+    @if (item == null)
+    {
+        <MudCardContent>
+            <MudSkeleton Width="60%" />
+            <MudSkeleton Width="100%" Height="120px"/>
+        </MudCardContent>
+        <MudCardActions>
+            <MudSkeleton Width="40px" Height="40px" Class="mx-2" />
+            <MudSkeleton Width="160px" Height="40px" Class="ml-2" />
+        </MudCardActions>
+    }
+    else
+    {
+        <MudCardContent>
+            <MudText>@item.Name</MudText>
+            <MudText Typo="Typo.body2">@item.Description</MudText>
+        </MudCardContent>
+        <MudCardActions>
+            <MudText Typo="Typo.button" Class="mx-2">@item.Cost</MudText>
+            <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@InvokePurchaseMethod">Purchase</MudButton>
+        </MudCardActions>
+    }
+</MudCard>
+
+@code {
+    [Parameter]
+    public Item? item { get; set; } = null;
+
+    [Parameter]
+    public Action<Item> PurchaseMethod { get; set; }
+
+    private void InvokePurchaseMethod()
+    {
+        PurchaseMethod?.Invoke(item);
+    }
+}
