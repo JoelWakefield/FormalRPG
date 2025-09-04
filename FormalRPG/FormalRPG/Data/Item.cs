@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FormalRPG.Data
 {
-    [Table("Items")]
+    [Table("RpgItems")]
     public class Item
     {
         public int Id { get; set; }

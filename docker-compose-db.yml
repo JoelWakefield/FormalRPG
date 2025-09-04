@@ -10,6 +10,6 @@ services:
     ports:
       - 5432:5432
     logging:
-      driver: none
+      driver: json-file
     environment:
       - POSTGRES_PASSWORD=DBPassword
