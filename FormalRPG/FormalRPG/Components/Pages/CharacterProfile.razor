@@ -1,0 +1,55 @@
+﻿@page "/character"
+@using FormalRPG.Data
+@attribute [StreamRendering]
+
+<PageTitle>Character</PageTitle>
+
+@if (character == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h1>@(character?.Name)</h1>
+
+    <p>This is the character profile page.</p>
+    
+    <div class="stats">
+        <h2>Stats</h2>
+
+        <p><b>XP:</b>@(character?.Xp)</p>
+        <p><b>Money:</b>@(character?.Money)</p>
+    </div>
+
+    <div class="quests">
+        <h2>Quests</h2>
+
+        @foreach (var quest in character?.Quests)
+        {
+            <p>@(quest.Name)</p>
+        }
+    </div>
+
+    <div class="upgrades">
+        <h2>Upgrades</h2>
+
+        @foreach (var upgrade in character?.Upgrades)
+        {
+            <p>@(upgrade.Name) - @(upgrade.Level)</p>
+        }
+    </div>
+
+    <div class="items">
+        <h2>Items</h2>
+
+        @foreach (var item in character?.Items)
+        {
+            <p>@(item.Name)</p>
+        }
+    </div>
+}
+
+
+@code {
+    private Character? character = new Character();
+}

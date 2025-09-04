@@ -1,0 +1,110 @@
+﻿@page "/quests"
+@using FormalRPG.Data
+
+<MudText Typo="Typo.h1" Class="px-6">Quests</MudText>
+
+@if (quests == null)
+{
+    <p><em>Loading...</em></p>
+} 
+else
+{
+
+	@if (Errors != null)
+	{
+		<MudPaper Class="my-6 pa-8">
+			<MudText Typo="Typo.caption" Class="px-6">@Errors</MudText>
+		</MudPaper>
+	}
+
+	<MudDropContainer T="KanbanItem" @ref="_dropContainer" Items="@_items" ItemsSelector="@((item,column) => item.Category == column)" ItemDropped="PhaseUpdatedAsync" Class="d-flex flex-row">
+		<ChildContent>
+			@foreach (var item in _sections)
+			{
+				<MudPaper Elevation="0" Width="224px" MinHeight="400px" Class="d-flex flex-column mx-2 pa-4 mud-background-gray rounded-lg">
+					<MudToolBar Gutters="false">
+						<MudText Typo="Typo.subtitle1">
+							<b>@item.Name</b>
+						</MudText>
+					</MudToolBar>
+					<MudDropZone T="KanbanItem" Identifier="@item.Name" Class="mud-height-full" />
+				</MudPaper>
+			}
+		</ChildContent>
+		<ItemRenderer>
+			<MudPaper Elevation="25" Class="pa-4 rounded-lg my-3">@context.Name</MudPaper>
+		</ItemRenderer>
+	</MudDropContainer>
+}
+
+@code {
+	private Character character = new Character();
+	private IEnumerable<Quest> quests = new List<Quest>();
+
+	private List<KanBanSection> _sections = new List<KanBanSection>() {
+		new KanBanSection("To Do"),
+		new KanBanSection("In Progress"),
+		new KanBanSection("Complete")
+	};
+	private MudDropContainer<KanbanItem> _dropContainer { get; set; } = default!;
+	private List<KanbanItem> _items { get; set; } = new List<KanbanItem>();
+	private string? Errors { get; set; } = null;
+
+	protected override async Task OnInitializedAsync()
+	{
+		//	Get all kanban items
+		_items.AddRange([new KanbanItem("quest", 1, "To Do", "1")]);
+	}
+
+	private async Task PhaseUpdatedAsync(MudItemDropInfo<KanbanItem> info)
+	{
+		if (info.Item == null)
+		{
+			Errors = "Item has no info.";
+		}
+		else
+		{
+			//	Update the board
+			string stageName = info.DropzoneIdentifier;
+			info.Item.Category = stageName;
+			Quest droppedQuest = quests.First(q => q.Id == info.Item.ItemId);
+
+			//	Update the Phase owner
+			if (stageName == "To Do")
+			{
+				character.Quests.Add(droppedQuest);
+			}
+			else if (stageName == "Complete")
+			{
+				character.Quests.Remove(droppedQuest);
+			}
+		}
+	}
+
+	public class KanBanSection
+	{
+		public string Name { get; init; }
+
+		public KanBanSection(string name)
+		{
+			Name = name;
+		}
+	}
+
+	public class KanbanItem
+	{
+		public string Name { get; init; }
+		public int ItemId { get; set; }
+		public string Category { get; set; }
+		public string CategoryId { get; set; }
+
+
+		public KanbanItem(string name, int itemId, string category, string categoryId)
+		{
+			Name = name;
+			ItemId = itemId;
+			Category = category;
+			CategoryId = categoryId;
+		}
+	}
+}
