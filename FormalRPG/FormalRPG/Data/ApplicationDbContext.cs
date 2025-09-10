@@ -11,6 +11,8 @@ namespace FormalRPG.Data
         public DbSet<Upgrade> Upgrades { get; set; }
         public DbSet<Item> Items { get; set; }
 
+        public DbSet<ActiveQuest> ActiveQuests { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ApplicationUser>()
@@ -28,14 +30,17 @@ namespace FormalRPG.Data
                     r => r.HasOne(typeof(Skill)).WithMany().HasForeignKey("SkillId").HasPrincipalKey(nameof(Skill.Id)),
                     j => j.HasKey("CharacterId", "SkillId"));
 
-            modelBuilder.Entity<Character>()
-                .HasMany(c => c.Quests)
-                .WithMany(q => q.Characters)
-                .UsingEntity(
-                    "RpgActiveQuests",
-                    l => l.HasOne(typeof(Character)).WithMany().HasForeignKey("CharacterId").HasPrincipalKey(nameof(Character.Id)),
-                    r => r.HasOne(typeof(Quest)).WithMany().HasForeignKey("QuestId").HasPrincipalKey(nameof(Quest.Id)),
-                    j => j.HasKey("CharacterId", "QuestId"));
+            modelBuilder.Entity<ActiveQuest>()
+                .HasOne(a => a.Quest)
+                .WithMany(q => q.Active)
+                .HasPrincipalKey(q => q.Id)
+                .HasForeignKey(a => a.QuestId);
+
+            modelBuilder.Entity<ActiveQuest>()
+                .HasOne(a => a.Character)
+                .WithMany(c => c.Quests)
+                .HasPrincipalKey(c => c.Id)
+                .HasForeignKey(a => a.Character);
 
             modelBuilder.Entity<Quest>()
                 .HasMany(q => q.Skills)

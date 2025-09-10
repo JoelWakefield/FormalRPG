@@ -12,7 +12,10 @@ namespace FormalRPG.Data
         [MaxLength(255)]
         public string Name { get; set; } = "";
 
-        public ICollection<Character> Characters { get; set; } = [];
+        [NotMapped]
+        public bool Completed { get; set; }
+
+        public ICollection<ActiveQuest> Active { get; set; }
         public ICollection<Skill> Skills { get; set; } = [];
     }
 }

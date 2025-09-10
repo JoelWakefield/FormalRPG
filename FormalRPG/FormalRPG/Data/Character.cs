@@ -21,8 +21,8 @@ namespace FormalRPG.Data
         [NotNull]
         public ApplicationUser User { get; set; }
 
+        public ICollection<ActiveQuest> Quests { get; set; }
         public ICollection<Skill> Skills { get; set; } = [];
-        public ICollection<Quest> Quests { get; set; } = [];
         public ICollection<Upgrade> Upgrades { get; set; } = [];
         public ICollection<Item> Items { get; set; } = [];
     }
